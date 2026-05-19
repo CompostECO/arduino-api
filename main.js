@@ -132,15 +132,15 @@ const inserirAlerta = async (valoresSensorAnalogico, valoresSensorDigital) => {
   )
   const qntAlertasSeisHoras = qntAlertasSeisHorasRetorno[0][0].qnt // coletar quantidade de alertas em determinado período
 
-  const deteccaoIdRetorno = await poolBancoDados.execute(
-    'SELECT id FROM deteccao WHERE sensor_id = ? ORDER BY criado_em DESC LIMIT 1',
+  const composteiraIdRetorno = await poolBancoDados.execute(
+    'SELECT composteira_id FROM sensor WHERE id = ?',
     [SENSOR_ID]
   )
-  const deteccaoId = deteccaoIdRetorno[0][0].id // coleta id da última detecção para fazer a relação
+  const composteiraId = composteiraIdRetorno[0][0].id // coleta id da última detecção para fazer a relação
 
   const qntLinhasInseridas = await poolBancoDados.execute(
-    'INSERT INTO alerta (deteccao_id, tipo, prioridade) VALUES (?, ?, ?)',
-    [deteccaoId, tipoAlerta, Math.floor(qntAlertasSeisHoras / 2)]
+    'INSERT INTO alerta (composteira_id, tipo, prioridade) VALUES (?, ?, ?)',
+    [composteiraId, tipoAlerta, Math.floor(qntAlertasSeisHoras / 2)]
   )
 
   return qntLinhasInseridas[0].affectedRows > 0 // retorna true, se o alerta foi inserido no bando, caso contrário, retorna false
